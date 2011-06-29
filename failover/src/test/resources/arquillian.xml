@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<arquillian xmlns="http://www.jboss.org/arquillian-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.jboss.org/arquillian-1.0 http://jboss.org/schema/arquillian/arquillian-1.0.xsd">
+
+    <group qualifier="Grid">
+        <container qualifier="container1" managed="false">
+            <configuration>
+                <property name="managementPort">9999</property>
+
+                <!--  when jbossHome is not specified a remote-container mode is used -->
+                <property name="jbossHome">/home/mgencur/Java/jboss7/jboss-7.0.0.CR1</property>
+                <!-- /home/mgencur/Java/infinispan/EDG6/jboss-datagrid-6.0.0.Alpha1-SNAPSHOT -->
+                <!--  by default it is 127.0.0.1 (see CommonContainerContiguration) -->
+                <!--  <property name="bindAddress"></property> -->
+
+            </configuration>
+        </container>
+        <container qualifier="container2" managed="false">
+            <configuration>
+                <property name="managementPort">19999</property>
+                <property name="jbossHome">/home/mgencur/Java/jboss7/jboss-7.0.0.CR1-2</property>
+            </configuration>
+        </container>
+    </group>
+    
+</arquillian>
