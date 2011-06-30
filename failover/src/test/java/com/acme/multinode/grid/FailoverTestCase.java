@@ -75,27 +75,23 @@ public class FailoverTestCase {
        System.out.println("===Container1 started===");
        deployer.deploy(DEPLOYMENT1);
        System.out.println("===Deployment deployed===");
-//       controller.start(CONTAINER2);
-//       System.out.println("===Container2 started===");
     }
     
     @Test
     public void stopTest() throws Exception {
-       deployer.undeploy(DEPLOYMENT1);
-       deployer.deploy(DEPLOYMENT1);
-       //controller.start(CONTAINER2);
-       //System.out.println("===Container2 started===");
-       //controller.stop(CONTAINER2);
-       //System.out.println("===Container2 stopped===");
-       
+       System.out.println("=== Before Container 2 Started ===");
+       controller.start(CONTAINER2);
+       System.out.println("===Container2 started===");
+       controller.stop(CONTAINER2);
+       System.out.println("===Container2 stopped===");
     }
     
-//    @Test
-//    public void killTest() throws Exception {
-//       controller.kill(CONTAINER1);
-//       //this is now implemented the same way as stop -> softly
-//       System.out.println("===Container2 killed===");
-////       controller.kill(CONTAINER2);
-////       System.out.println("===Container2 killed===");
-//    }
+    @Test
+    public void killTest() throws Exception {
+       controller.start(CONTAINER2);
+       System.out.println("===Container2 started===");
+       controller.kill(CONTAINER2);
+       //this is now implemented the same way as stop -> softly
+       System.out.println("===Container2 killed===");
+    }
 }

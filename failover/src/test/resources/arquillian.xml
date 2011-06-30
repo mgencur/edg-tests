@@ -6,13 +6,7 @@
         <container qualifier="container1" managed="false">
             <configuration>
                 <property name="managementPort">9999</property>
-
-                <!--  when jbossHome is not specified a remote-container mode is used -->
                 <property name="jbossHome">/home/mgencur/Java/jboss7/jboss-7.0.0.CR1</property>
-                <!-- /home/mgencur/Java/infinispan/EDG6/jboss-datagrid-6.0.0.Alpha1-SNAPSHOT -->
-                <!--  by default it is 127.0.0.1 (see CommonContainerContiguration) -->
-                <!--  <property name="bindAddress"></property> -->
-
             </configuration>
         </container>
         <container qualifier="container2" managed="false">
