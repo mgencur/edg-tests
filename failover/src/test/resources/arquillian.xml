@@ -4,12 +4,18 @@
 
     <group qualifier="Grid">
         <container qualifier="container1" managed="false">
+            <protocol type="jmx-as7">
+                <property name="executionType">REMOTE</property>
+            </protocol>
             <configuration>
                 <property name="managementPort">9999</property>
                 <property name="jbossHome">/home/mgencur/Java/jboss7/jboss-7.0.0.CR1</property>
             </configuration>
         </container>
         <container qualifier="container2" managed="false">
+            <protocol type="jmx-as7">
+                <property name="executionType">REMOTE</property>
+            </protocol>
             <configuration>
                 <property name="managementPort">19999</property>
                 <property name="jbossHome">/home/mgencur/Java/jboss7/jboss-7.0.0.CR1-2</property>
