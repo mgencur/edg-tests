@@ -37,7 +37,7 @@ import org.jboss.arquillian.container.spi.ServerKillProcessor;
  */
 public class JBossAS7ServerKillProcessor implements ServerKillProcessor 
 {
-   private final Logger log = Logger.getLogger(DefaultServerKillProcessor.class.getName());
+   private final Logger log = Logger.getLogger(JBossAS7ServerKillProcessor.class.getName());
    
    private static String killSequence = "kill -9 `ps aux | grep -v 'grep' | grep 'jboss.home.dir=[jbossHome] ' | sed -re '1,$s/[ \\t]+/ /g' | cut -d ' ' -f 2`";
    
