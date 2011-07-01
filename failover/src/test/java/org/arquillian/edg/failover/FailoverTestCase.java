@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.acme.multinode.grid;
+package org.arquillian.edg.failover;
 
 import org.jboss.arquillian.test.api.ArquillianResource;
 import org.jboss.arquillian.container.test.api.ContainerController;
@@ -77,14 +77,14 @@ public class FailoverTestCase {
        System.out.println("===Deployment deployed===");
     }
     
-    @Test
-    public void stopTest() throws Exception {
-       System.out.println("=== Before Container 2 Started ===");
-       controller.start(CONTAINER2);
-       System.out.println("===Container2 started===");
-       controller.stop(CONTAINER2);
-       System.out.println("===Container2 stopped===");
-    }
+//    @Test
+//    public void stopTest() throws Exception {
+//       System.out.println("=== Before Container 2 Started ===");
+//       controller.start(CONTAINER2);
+//       System.out.println("===Container2 started===");
+//       controller.stop(CONTAINER2);
+//       System.out.println("===Container2 stopped===");
+//    }
     
     @Test
     public void killTest() throws Exception {
