@@ -17,25 +17,14 @@
  */
 package org.infinispan.server;
 
-import org.jboss.arquillian.container.test.api.Deployment;
-import org.jboss.arquillian.container.test.api.TargetsContainer;
 import org.jboss.arquillian.junit.Arquillian;
-import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 @RunWith(Arquillian.class)
 public class ServerHandlingTestCase {
    
-    private static final String CONTAINER1 = "container1"; 
-    private static final String DEPLOYMENT1 = "dep.container1"; 
-   
-    @Deployment(name = DEPLOYMENT1, managed=true)
-    @TargetsContainer(CONTAINER1)
-    public static WebArchive createTestDeployment() {
-        return Deployments.createActiveClient();
-    }
-    
+    //by default runs in Client mode (when no @Deployment is present)
     @Test
     public void startStopTest() throws Exception {
        System.out.println("=== Inside startStopTest ===");
