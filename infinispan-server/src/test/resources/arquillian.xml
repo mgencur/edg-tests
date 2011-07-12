@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<arquillian xmlns="http://www.jboss.org/arquillian-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.jboss.org/arquillian-1.0 http://jboss.org/schema/arquillian/arquillian-1.0.xsd">
+
+    <group qualifier="Grid">
+        <container qualifier="container1" managed="true">
+            <configuration>
+                <property name="ispnHome">/home/mgencur/Java/infinispan/infinispan-5.0.0.CR3</property>
+                <property name="protocol">hotrod</property>
+                
+                <property name="cacheConfig">myExtraFile</property>
+            </configuration>
+        </container>
+    </group>
+    
+</arquillian>
