@@ -3,12 +3,12 @@
     xsi:schemaLocation="http://www.jboss.org/arquillian-1.0 http://jboss.org/schema/arquillian/arquillian-1.0.xsd">
 
     <group qualifier="Grid">
-        <container qualifier="container1" managed="true">
+        <container qualifier="container1">
             <configuration>
-                <property name="ispnHome">/home/mgencur/Java/infinispan/infinispan-5.0.0.CR3</property>
+                <property name="ispnHome">/home/mgencur/Java/infinispan/infinispan-5.0.0.CR7</property>
                 <property name="protocol">hotrod</property>
                 
-                <property name="cacheConfig">myExtraFile</property>
+<!--                 <property name="cacheConfig">myExtraFile</property> -->
             </configuration>
         </container>
     </group>
