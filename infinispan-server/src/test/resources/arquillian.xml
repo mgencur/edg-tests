@@ -6,9 +6,16 @@
         <container qualifier="container1">
             <configuration>
                 <property name="ispnHome">/home/mgencur/Java/infinispan/infinispan-5.0.0.CR7</property>
-                <property name="protocol">hotrod</property>
-                
-<!--                 <property name="cacheConfig">myExtraFile</property> -->
+                <property name="protocol">memcached</property>
+                <property name="startupTimeoutInSeconds">5</property>
+            </configuration>
+        </container>
+        <container qualifier="container2">
+            <configuration>
+                <property name="ispnHome">/home/mgencur/Java/infinispan/infinispan-5.0.0.CR7</property>
+                <property name="protocol">memcached</property>
+                <property name="port">11223</property>
+                <property name="jmxPort">1091</property>
             </configuration>
         </container>
     </group>
