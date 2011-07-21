@@ -15,6 +15,7 @@
         <version.arquillian>1.0.0.Final-SNAPSHOT</version.arquillian>
         <version.junit>4.8.1</version.junit>
         <version.jboss_as7>7.0.0.Final</version.jboss_as7>
+        <hotrod.client.version>5.0.0.CR8</hotrod.client.version>
     </properties>
     
     <dependencies>
@@ -27,6 +28,12 @@
             <groupId>org.jboss.arquillian.junit</groupId>
             <artifactId>arquillian-junit-container</artifactId>
             <version>${version.arquillian}</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.infinispan</groupId>
+            <artifactId>infinispan-client-hotrod</artifactId>
+            <version>${hotrod.client.version}</version>
             <scope>compile</scope>
         </dependency>
     </dependencies>
