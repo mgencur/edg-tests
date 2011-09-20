@@ -18,6 +18,7 @@
 package org.arquillian.edg.failover;
 
 import org.jboss.arquillian.test.api.ArquillianResource;
+import org.jboss.arquillian.container.test.api.Config;
 import org.jboss.arquillian.container.test.api.ContainerController;
 import org.jboss.arquillian.container.test.api.Deployer;
 import org.jboss.arquillian.container.test.api.Deployment;
@@ -58,7 +59,7 @@ public class FailoverTestCase {
      * we can control deploying manually via Deployer's deploy/undeploy
      * methods
      */
-    @Deployment(name = DEPLOYMENT1, managed=false)
+    @Deployment(name = DEPLOYMENT1, managed=true)
     @TargetsContainer(CONTAINER1)
     public static WebArchive createTestDeployment() {
         return Deployments.createActiveClient();
@@ -67,29 +68,30 @@ public class FailoverTestCase {
     /*
      * We don't have a container available at this point so we have to run in Client mode.
      * All the subsequent @Test methods will be already InContainer.
+     * Set @Deployment's managed flag to "false" when intending to try @RunAsClient
      */
-    @Test
-    @RunAsClient
-    public void startAndDeploy() throws Exception {
-       controller.start(CONTAINER1);
-       System.out.println("===Container1 started===");
-       deployer.deploy(DEPLOYMENT1);
-       System.out.println("===Deployment deployed===");
-    }
-    
 //    @Test
-//    public void stopTest() throws Exception {
-//       System.out.println("=== Before Container 2 Started ===");
-//       controller.start(CONTAINER2);
-//       System.out.println("===Container2 started===");
-//       controller.stop(CONTAINER2);
-//       System.out.println("===Container2 stopped===");
+//    @RunAsClient
+//    public void startAndDeploy() throws Exception {
+//       controller.start(CONTAINER1);
+//       System.out.println("===Container1 started===");
+//       deployer.deploy(DEPLOYMENT1);
+//       System.out.println("===Deployment deployed===");
 //    }
     
     @Test
-    public void killTest() throws Exception {
-       controller.start(CONTAINER2);
+    public void stopTest() throws Exception {
+       System.out.println("=== Before Container 2 Started ===");
+       controller.start(CONTAINER2); //, new Config().add("managementPort", "29999").map()
        System.out.println("===Container2 started===");
+       controller.stop(CONTAINER2);
+       System.out.println("===Container2 stopped===");
+    }
+    
+    @Test
+    public void killTest() throws Exception {
+       controller.start(CONTAINER2, new Config().add("managementPort", "19999").map());
+       System.out.println("===Container2 started again===");
        controller.kill(CONTAINER2);
        //this is now implemented the same way as stop -> softly
        System.out.println("===Container2 killed===");

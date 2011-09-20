@@ -20,7 +20,7 @@ package org.arquillian.edg.failover;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
-import org.jboss.shrinkwrap.resolver.impl.maven.MavenRepositorySettings;
+//import org.jboss.shrinkwrap.resolver.impl.maven.MavenRepositorySettings;
 
 /**
  * Deployments
@@ -31,7 +31,7 @@ import org.jboss.shrinkwrap.resolver.impl.maven.MavenRepositorySettings;
  */
 public class Deployments {
     {
-        System.setProperty(MavenRepositorySettings.ALT_USER_SETTINGS_XML_LOCATION, "grid/jboss-repositories.xml");
+        //System.setProperty(MavenRepositorySettings.ALT_USER_SETTINGS_XML_LOCATION, "grid/jboss-repositories.xml");
     }
 
     public static WebArchive createActiveClient() {
