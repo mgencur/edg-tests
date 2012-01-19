@@ -40,6 +40,9 @@ import org.jboss.shrinkwrap.api.spec.WebArchive;
 @RunWith(Arquillian.class)
 public class MultiNodeTest
 {
+   static Cache cache1; //variable to store a cache to for server1
+   static Cache cache2; //variable to store a cache to for server2
+    
    /* Deploy first deployment to first server - same as the second deployment*/ 
    @Deployment(name="dep1", order=1) 
    @TargetsContainer("container1")
@@ -59,62 +62,65 @@ public class MultiNodeTest
    }
    
    /* Start cache manager and its cache in first container - no real testing here */
-   @Test
-   @InSequence(1)
+   @Test 
+   @InSequence(1) 
    @OperateOnDeployment("dep1")
    public void initServer1() {
-       GlobalConfiguration glob = new GlobalConfigurationBuilder()
-           .clusteredDefault()
-           .build();
-       Configuration loc = new ConfigurationBuilder()
-           .clustering()
-           .cacheMode(CacheMode.REPL_SYNC)  
-           .build();
-       DefaultCacheManager dc = new DefaultCacheManager(glob, loc, true);
-       Cache cache1 = dc.getCache();
+       cache1 = configureCache();
    }
    
-   /* Start second cache manager in second container and start its default cache, 
-    * wait for cluster to form and do some real testing
-    * 
-    * NOTE: We can only verify content of the cache located in container2 (i.e. cache2) because the test
-    * for container1 was already executed and we don't have access to it from this test method
+   /*
+    * Start the second cache manager in the second container and start its default cache, 
+    * wait for the cluster to form and do some real testing
     */
-   @Test
-   @InSequence(2)
+   @Test 
+   @InSequence(2) 
    @OperateOnDeployment("dep2")
    public void initAndTestServer2(){
-       GlobalConfiguration glob = new GlobalConfigurationBuilder()
-           .clusteredDefault()
-           .build();
-       Configuration loc = new ConfigurationBuilder()
-           .clustering()
-           .cacheMode(CacheMode.REPL_SYNC)  
-           .build();
-       DefaultCacheManager dc = new DefaultCacheManager(glob, loc, true);
-
-       Cache cache2 = dc.getCache();
-       
-       waitForClusterToForm(dc, 2);
+       cache2 = configureCache();
+       waitForClusterToForm(cache2, 2);
        
        // do some real testing here
        cache2.put("k1", "v1");
        Assert.assertEquals("v1", cache2.get("k1"));
    }
    
-   private void waitForClusterToForm(DefaultCacheManager dcm, int numNodes) {
-       while (dcm.getClusterSize() < numNodes) {
-          try {
-              Thread.sleep(500);
-          } catch (InterruptedException e) {
-              // FIXME
-              throw new RuntimeException(e);
-          }
-       }
-       Assert.assertEquals(numNodes, dcm.getClusterSize());
+   /*Do some real testing on server1 - typically verify results of the operation performed on server2*/
+   @Test 
+   @InSequence(3) 
+   @OperateOnDeployment("dep1")
+   public void testServer1() {
+       Assert.assertEquals("v1", cache1.get("k1"));
    }
-
    
+   protected Cache configureCache() {
+       GlobalConfiguration glob = new GlobalConfigurationBuilder()
+           .clusteredDefault()
+           .build();
+       Configuration loc = new ConfigurationBuilder()
+           .clustering()
+           .cacheMode(CacheMode.REPL_SYNC)  
+           .build();
+       DefaultCacheManager dcm = new DefaultCacheManager(glob, loc, true);
+       Cache cache = dcm.getCache();
+       return cache;
+   }
+   
+   protected void waitForClusterToForm(Cache cache, int numNodes) {
+       if (cache.getCacheManager() instanceof DefaultCacheManager) {
+           DefaultCacheManager dcm = (DefaultCacheManager) cache.getCacheManager();
+           while (dcm.getClusterSize() < numNodes) {
+               try {
+                   Thread.sleep(500);
+               } catch (InterruptedException e) {
+                   throw new RuntimeException(e);
+               }
+           }
+           Assert.assertEquals(numNodes, dcm.getClusterSize());
+       } else {
+           return;
+       }
+   }
    
 /*
  * When using a servlet which internally instantiates a cache manager and a cache
