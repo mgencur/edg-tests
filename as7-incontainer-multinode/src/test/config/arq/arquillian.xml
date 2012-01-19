@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<arquillian xmlns="http://www.jboss.org/arquillian-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.jboss.org/arquillian-1.0 http://jboss.org/schema/arquillian/arquillian-1.0.xsd">
+
+    <group qualifier="grid">
+        <container qualifier="container1">
+            <configuration>
+                <property name="bindAddress">test1</property>
+                <property name="managementAddress">test1</property>
+                <property name="managementPort">9999</property>
+                <property name="jbossHome">/home/mgencur/Java/git/jboss-as/build/target/jboss-as-7.1.0.Final-SNAPSHOT</property>
+            </configuration>
+        </container>
+        <container qualifier="container2">
+            <configuration>
+                <property name="bindAddress">test2</property>
+                <property name="managementAddress">test2</property>
+                <property name="managementPort">9999</property>
+                <property name="jbossHome">/home/mgencur/Java/git/jboss-as/build/target/jboss-as-7.1.0.Final-SNAPSHOT2</property>
+            </configuration>
+        </container>
+    </group>
+    
+</arquillian>

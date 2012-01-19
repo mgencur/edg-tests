@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>org.jboss.arquillian.test</groupId>
+    <artifactId>as7-incontainer-multinode</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+    <packaging>jar</packaging>
+    <name>AS7 with embedded Infinispan</name>
+    <description>Example running clustered Infinispan embedded in multiple AS7</description>
+
+    <properties>
+        <version.arquillian_core>1.0.0.CR7</version.arquillian_core>
+        <version.jboss.as.arquillian>7.1.0.Final-SNAPSHOT</version.jboss.as.arquillian>
+        <version.jboss.as.controller.client>7.1.0.Final-SNAPSHOT</version.jboss.as.controller.client>
+        <version.junit>4.8.1</version.junit>
+        <version.infinispan_core>5.1.0.CR2</version.infinispan_core>
+        <version.jboss-logging>3.1.0.CR1</version.jboss-logging>
+        <version.maven.surefire.plugin>2.9</version.maven.surefire.plugin>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.jboss.arquillian</groupId>
+            <artifactId>arquillian-bom</artifactId>
+            <version>${version.arquillian_core}</version>
+            <type>pom</type>
+            <scope>import</scope>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>${version.junit}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.arquillian.junit</groupId>
+            <artifactId>arquillian-junit-container</artifactId>
+            <version>${version.arquillian_core}</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.as</groupId>
+            <artifactId>jboss-as-arquillian-container-managed</artifactId>
+            <version>${version.jboss.as.arquillian}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.logging</groupId>
+            <artifactId>jboss-logging</artifactId>
+            <version>${version.jboss-logging}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.infinispan</groupId>
+            <artifactId>infinispan-core</artifactId>
+            <scope>test</scope>
+            <version>${version.infinispan_core}</version>
+        </dependency>
+        <!-- dependencies for use cases with servlet and http client accessing the servlet remotely -->
+<!--         <dependency> -->
+<!--             <groupId>javax.servlet</groupId> -->
+<!--             <artifactId>servlet-api</artifactId> -->
+<!--             <version>2.4</version> -->
+<!--             <scope>provided</scope> -->
+<!--         </dependency> -->
+<!--         <dependency> -->
+<!--             <groupId>javax</groupId> -->
+<!--             <artifactId>javaee-api</artifactId> -->
+<!--             <version>6.0</version> -->
+<!--         </dependency> -->
+<!--         <dependency> -->
+<!--             <groupId>org.apache.httpcomponents</groupId> -->
+<!--             <artifactId>httpclient</artifactId> -->
+<!--             <version>4.1.2</version> -->
+<!--         </dependency> -->
+<!--         <dependency> -->
+<!--             <groupId>org.apache.httpcomponents</groupId> -->
+<!--             <artifactId>httpcore</artifactId> -->
+<!--             <version>4.1.2</version> -->
+<!--         </dependency> -->
+<!--         <dependency> -->
+<!--             <groupId>org.apache.httpcomponents</groupId> -->
+<!--             <artifactId>httpmime</artifactId> -->
+<!--             <version>4.1.2</version> -->
+<!--         </dependency> -->
+    </dependencies>
+    
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>${version.maven.surefire.plugin}</version>
+                <configuration>
+                    <forkMode>once</forkMode>
+                    <skipTests>false</skipTests>
+                    <additionalClasspathElements combine.children="append">
+                        <additionalClasspathElement>${basedir}/src/test/config/arq</additionalClasspathElement>
+                    </additionalClasspathElements>
+                    <!-- Parameters to test cases. -->
+                    <systemPropertyVariables>
+                        <arquillian.launch>grid</arquillian.launch>
+                    </systemPropertyVariables>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>
