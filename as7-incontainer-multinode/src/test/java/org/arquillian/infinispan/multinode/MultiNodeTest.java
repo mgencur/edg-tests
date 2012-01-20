@@ -40,8 +40,8 @@ import org.jboss.shrinkwrap.api.spec.WebArchive;
 @RunWith(Arquillian.class)
 public class MultiNodeTest
 {
-   static Cache cache1; //variable to store a cache to for server1
-   static Cache cache2; //variable to store a cache to for server2
+   static Cache cache; //variable to store a cache to (different on both servers since both servers
+                       //have different .class file loaded in JVM)
     
    /* Deploy first deployment to first server - same as the second deployment*/ 
    @Deployment(name="dep1", order=1) 
@@ -56,9 +56,7 @@ public class MultiNodeTest
    @Deployment(name="dep2", order=2) 
    @TargetsContainer("container2")
    public static Archive<?> deployment2() {
-       WebArchive war = ShrinkWrap.create(WebArchive.class, "test.war");
-       war.addAsManifestResource(new StringAsset("Dependencies: org.infinispan, org.jgroups\n"), "MANIFEST.MF");
-       return war;
+       return deployment1();
    }
    
    /* Start cache manager and its cache in first container - no real testing here */
@@ -66,7 +64,7 @@ public class MultiNodeTest
    @InSequence(1) 
    @OperateOnDeployment("dep1")
    public void initServer1() {
-       cache1 = configureCache();
+       cache = configureCache();
    }
    
    /*
@@ -77,12 +75,13 @@ public class MultiNodeTest
    @InSequence(2) 
    @OperateOnDeployment("dep2")
    public void initAndTestServer2(){
-       cache2 = configureCache();
-       waitForClusterToForm(cache2, 2);
+       cache = configureCache();
+       waitForClusterToForm(cache, 2);
        
        // do some real testing here
-       cache2.put("k1", "v1");
-       Assert.assertEquals("v1", cache2.get("k1"));
+       cache.put("k1", "v1");
+       Assert.assertEquals("v1", cache.get("k1"));
+       System.out.println("CM2 address: " + cache.getCacheManager().getAddress());
    }
    
    /*Do some real testing on server1 - typically verify results of the operation performed on server2*/
@@ -90,7 +89,8 @@ public class MultiNodeTest
    @InSequence(3) 
    @OperateOnDeployment("dep1")
    public void testServer1() {
-       Assert.assertEquals("v1", cache1.get("k1"));
+       Assert.assertEquals("v1", cache.get("k1"));
+       System.out.println("CM1 address: " + cache.getCacheManager().getAddress());
    }
    
    protected Cache configureCache() {
@@ -99,12 +99,20 @@ public class MultiNodeTest
            .build();
        Configuration loc = new ConfigurationBuilder()
            .clustering()
-           .cacheMode(CacheMode.REPL_SYNC)  
-           .build();
+           .cacheMode(CacheMode.REPL_SYNC)
+           .build(); 
        DefaultCacheManager dcm = new DefaultCacheManager(glob, loc, true);
        Cache cache = dcm.getCache();
        return cache;
    }
+   
+//   protected Cache configureCacheAlternative() { //needs infinispan-core with classifier "tests" 
+//       ConfigurationBuilder loc = new ConfigurationBuilder();
+//       loc.clustering().cacheMode(CacheMode.REPL_SYNC); 
+//       DefaultCacheManager dcm1 = (DefaultCacheManager) TestCacheManagerFactory.createClusteredCacheManager(loc, null);
+//       Cache cache = dcm1.getCache();
+//       return cache;
+//   }
    
    protected void waitForClusterToForm(Cache cache, int numNodes) {
        if (cache.getCacheManager() instanceof DefaultCacheManager) {
@@ -124,18 +132,19 @@ public class MultiNodeTest
    
 /*
  * When using a servlet which internally instantiates a cache manager and a cache
- * 
+ *
    @Test
    @RunAsClient
-   public void testSerialized(@ArquillianResource(SimpleServlet.class) URL baseURL) throws ClientProtocolException, IOException {
+   @OperateOnDeployment("dep1")
+   public void testSerialized(@ArquillianResource(SimpleServlet.class) URL baseUrl) throws ClientProtocolException, IOException {
        DefaultHttpClient client = new DefaultHttpClient();
 
        // returns the URL of the deployment (http://127.0.0.1:8180/test)
-       String url = baseURL.toString();
+       String url = baseUrl.toString();
        System.out.println("URL = " + url);
 
        try {
-           HttpResponse response = client.execute(new HttpGet(url + "simple"));
+           HttpResponse response = client.execute(new HttpGet(url + "simple?param=Martin"));
            Assert.assertEquals(HttpServletResponse.SC_OK, response.getStatusLine().getStatusCode());
            response.getEntity().getContent().close();
        } finally {
@@ -143,4 +152,5 @@ public class MultiNodeTest
        }
    }
 */
+   
 }
