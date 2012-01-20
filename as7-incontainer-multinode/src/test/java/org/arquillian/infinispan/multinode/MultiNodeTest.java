@@ -17,6 +17,11 @@
  */
 package org.arquillian.infinispan.multinode;
 
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
+import javax.servlet.ServletException;
+
 import junit.framework.Assert;
 import org.infinispan.Cache;
 import org.infinispan.configuration.cache.CacheMode;
@@ -41,7 +46,8 @@ import org.jboss.shrinkwrap.api.spec.WebArchive;
 public class MultiNodeTest
 {
    static Cache cache; //variable to store a cache to (different on both servers since both servers
-                       //have different .class file loaded in JVM)
+                       //have different .class file loaded in JVM), other way to pass cache between
+                       //test method calls is via JNDI - store/retrieve 
     
    /* Deploy first deployment to first server - same as the second deployment*/ 
    @Deployment(name="dep1", order=1) 
@@ -65,6 +71,7 @@ public class MultiNodeTest
    @OperateOnDeployment("dep1")
    public void initServer1() {
        cache = configureCache();
+       //bindCacheToJndi(cache, "myCache");
    }
    
    /*
@@ -89,6 +96,7 @@ public class MultiNodeTest
    @InSequence(3) 
    @OperateOnDeployment("dep1")
    public void testServer1() {
+       //Cache cache = lookupCache("myCache");
        Assert.assertEquals("v1", cache.get("k1"));
        System.out.println("CM1 address: " + cache.getCacheManager().getAddress());
    }
@@ -129,6 +137,28 @@ public class MultiNodeTest
            return;
        }
    }
+   
+//   protected void bindCacheToJndi(Cache cache, String name) {
+//       try {
+//           final Context context = new InitialContext();
+//           context.bind("java:jboss/infinispan/" + name, cache);
+//       } catch (NamingException e) {
+//           throw new RuntimeException(e);
+//       }
+//   }
+//   
+//   protected Cache lookupCache(String name) {
+//       try {
+//           Object obj = new InitialContext().lookup("java:jboss/infinispan/" + name);
+//           if (obj instanceof Cache) {
+//               return (Cache) obj;
+//           } else {
+//               return null;
+//           }
+//       } catch (NamingException e) {
+//           throw new RuntimeException(e);
+//       }
+//   }
    
 /*
  * When using a servlet which internally instantiates a cache manager and a cache
